@@ -60,10 +60,10 @@
         (function() {
             // Configuration Constants for Pagination
             const INITIAL_LIMIT = 4;
-            const LOAD_LIMIT = 6; // Set to 6 so 4 + 6 = 10, as requested
+            const LOAD_LIMIT = 5; // CHANGED from 6 to 5
             let currentLimit = INITIAL_LIMIT; // Tracks how many questions are currently visible
 
-            // STEP 1: Centralized Data Array - Now includes 10 questions for proper testing
+            // STEP 1: Centralized Data Array - Now includes 20 questions
             const qaData = [
                 {
                     id: "BQA001", // Unique ID for this question
@@ -111,7 +111,6 @@
                         source: "Rev. Thomas A."
                     }]
                 },
-                // Additional Questions for Pagination Testing
                 {
                     id: "BQA006",
                     question: "Which prophet was swallowed by a great fish?",
@@ -150,6 +149,87 @@
                     answers: [{
                         text: "Jesus prayed in the Garden of **Gethsemane** (meaning 'oil press') on the Mount of Olives just before his arrest and crucifixion.",
                         source: "Gospel of Mark"
+                    }]
+                },
+                // --- 10 NEW QUESTIONS ADDED HERE ---
+                {
+                    id: "BQA011",
+                    question: "What is manna, and where did the Israelites find it?",
+                    answers: [{
+                        text: "Manna was the food miraculously supplied to the Israelites during their 40 years of wandering in the desert after leaving Egypt. It appeared as a small, flaky substance on the ground every morning. The name literally means 'What is it?'",
+                        source: "Exodus 16"
+                    }]
+                },
+                {
+                    id: "BQA012",
+                    question: "Who built the Ark, and why?",
+                    answers: [{
+                        text: "**Noah** built the Ark, instructed by God, to save his family and pairs of all land animals from the catastrophic Great Flood that covered the entire earth.",
+                        source: "Genesis 6-9"
+                    }]
+                },
+                {
+                    id: "BQA013",
+                    question: "What are the two main sections of the Bible?",
+                    answers: [{
+                        text: "The Bible is divided into two main parts: the **Old Testament** (covering creation, the history of Israel, and the prophets) and the **New Testament** (covering the life of Jesus Christ, the ministry of the early church, and prophecy regarding the end times).",
+                        source: "Biblical Structure"
+                    }]
+                },
+                {
+                    id: "BQA014",
+                    question: "Who was Moses' brother, and what was his role?",
+                    answers: [{
+                        text: "Moses' older brother was **Aaron**. Aaron served as Moses' spokesman to Pharaoh and the people of Israel because Moses claimed he was 'slow of speech.' Aaron also became the first High Priest of the Israelites.",
+                        source: "Exodus 7"
+                    }]
+                },
+                {
+                    id: "BQA015",
+                    question: "What is the significance of the rainbow in the Bible?",
+                    answers: [{
+                        text: "The rainbow is a sign of **God's covenant with Noah** and all living creatures, promising never again to destroy the earth with a global flood.",
+                        source: "Genesis 9:13"
+                    }]
+                },
+                {
+                    id: "BQA016",
+                    question: "Where did Jesus turn water into wine?",
+                    answers: [{
+                        text: "Jesus performed his first recorded public miracle at a wedding in **Cana of Galilee**, demonstrating his divine power and glory.",
+                        source: "John 2:1-11"
+                    }]
+                },
+                {
+                    id: "BQA017",
+                    question: "What is the meaning of 'Immanuel'?",
+                    answers: [{
+                        text: "'Immanuel' is a Hebrew name meaning **'God with us'**. It is used in prophecy in the book of Isaiah and later applied to Jesus Christ in the New Testament (Matthew 1:23).",
+                        source: "Isaiah 7:14, Matthew 1:23"
+                    }]
+                },
+                {
+                    id: "BQA018",
+                    question: "What city was Jesus born in?",
+                    answers: [{
+                        text: "Jesus was born in the city of **Bethlehem** in Judea. This location fulfilled the Old Testament prophecy found in Micah 5:2.",
+                        source: "Luke 2:4"
+                    }]
+                },
+                {
+                    id: "BQA019",
+                    question: "Who was the disciple who betrayed Jesus?",
+                    answers: [{
+                        text: "**Judas Iscariot** was the disciple who betrayed Jesus to the chief priests and elders for thirty pieces of silver. He is an enduring example of treachery.",
+                        source: "Matthew 26:14-16"
+                    }]
+                },
+                {
+                    id: "BQA020",
+                    question: "What is the primary message of the Sermon on the Mount?",
+                    answers: [{
+                        text: "The Sermon on the Mount (recorded in Matthew chapters 5 through 7) is primarily about **kingdom ethics**, setting forth the moral and spiritual requirements for those who follow God (including famous sections like the Beatitudes and the Lord's Prayer).",
+                        source: "Gospel of Matthew"
                     }]
                 }
             ];
