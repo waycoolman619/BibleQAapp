@@ -3,44 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bible Answer Search</title>
-    <!-- Load Tailwind CSS -->
+    <title>Bible Q&A</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load Custom Stylesheet -->
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* Configure Tailwind to use Inter font and apply some base styles */
-        body { font-family: 'Inter', sans-serif; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .question-toggle {
+            transition: transform 0.3s ease;
+        }
+        .question.active .question-toggle {
+            transform: rotate(90deg);
+        }
     </style>
 </head>
-<body class="bg-gray-50">
-    <div id="quiz-container" class="w-full max-w-2xl bg-white p-6 md:p-10 rounded-xl shadow-2xl mt-8">
-        <h1 class="text-4xl font-bold text-center text-blue-800 mb-6">
-            Bible Answer Lookup
-        </h1>
+<body class="bg-gray-100 text-gray-800">
 
-        <!-- Search Input and Button -->
-        <div class="flex flex-col md:flex-row gap-4 mb-8">
-            <input 
-                type="text" 
-                id="search-input" 
-                placeholder="e.g., 'first king' or 'who was swallowed by a fish'"
-                class="flex-grow p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
-            >
-            <button 
-                id="search-btn" 
-                class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ease-in-out"
-            >
-                Search for Answer
-            </button>
-        </div>
+    <div class="container mx-auto px-4 py-8 md:py-16">
 
-        <!-- Results Display Area -->
-        <div id="results-container">
-            <!-- Search results will appear here -->
-        </div>
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900">Bible Questions & Answers</h1>
+            <p class="text-lg text-gray-600 mt-2">Exploring the Scriptures Together</p>
+        </header>
+
+        <!-- Main Content: Q&A Section -->
+        <main class="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6 md:p-8">
+            <div id="qa-container">
+                <!-- Q&A Item 1 -->
+                <div class="qa-item border-b border-gray-200 py-4">
+                    <div class="question flex justify-between items-center cursor-pointer">
+                        <h2 class="text-xl font-semibold text-gray-800">What are the first five books of the Bible called?</h2>
+                        <span class="question-toggle text-2xl font-bold text-gray-500">&#x276F;</span>
+                    </div>
+                    <div class="answer hidden mt-4 text-gray-700">
+                        <p>The first five books of the Bible are known as the Pentateuch or the Torah. They are Genesis, Exodus, Leviticus, Numbers, and Deuteronomy. These books lay the foundation for the entire biblical narrative, covering creation, the establishment of the covenant with Abraham, the exodus from Egypt, the giving of the Law on Mount Sinai, and the Israelites' journey to the promised land.</p>
+                    </div>
+                </div>
+
+                <!-- Q&A Item 2 -->
+                <div class="qa-item border-b border-gray-200 py-4">
+                    <div class="question flex justify-between items-center cursor-pointer">
+                        <h2 class="text-xl font-semibold text-gray-800">Who wrote the book of Psalms?</h2>
+                        <span class="question-toggle text-2xl font-bold text-gray-500">&#x276F;</span>
+                    </div>
+                    <div class="answer hidden mt-4 text-gray-700">
+                        <p>The book of Psalms is a collection of poems, hymns, and prayers from various authors. While King David is traditionally credited with writing many of them (around 73 are attributed to him), other authors include Asaph, the sons of Korah, Solomon, and Moses. The authorship of many psalms remains anonymous.</p>
+                    </div>
+                </div>
+
+                <!-- Q&A Item 3 -->
+                <div class="qa-item border-b border-gray-200 py-4">
+                    <div class="question flex justify-between items-center cursor-pointer">
+                        <h2 class="text-xl font-semibold text-gray-800">What is the shortest verse in the Bible?</h2>
+                         <span class="question-toggle text-2xl font-bold text-gray-500">&#x276F;</span>
+                    </div>
+                    <div class="answer hidden mt-4 text-gray-700">
+                        <p>The shortest verse in the Bible is John 11:35, which simply says, "Jesus wept." This powerful two-word verse occurs in the context of Jesus mourning the death of his friend Lazarus before raising him from the dead.</p>
+                    </div>
+                </div>
+
+                <!-- Q&A Item 4 -->
+                <div class="qa-item py-4">
+                    <div class="question flex justify-between items-center cursor-pointer">
+                        <h2 class="text-xl font-semibold text-gray-800">What are the Gospels?</h2>
+                         <span class="question-toggle text-2xl font-bold text-gray-500">&#x276F;</span>
+                    </div>
+                    <div class="answer hidden mt-4 text-gray-700">
+                        <p>The Gospels are the first four books of the New Testament: Matthew, Mark, Luke, and John. They each provide a unique account of the life, ministry, teachings, death, and resurrection of Jesus Christ. The word "gospel" itself means "good news."</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="text-center mt-12">
+            <p class="text-gray-500">&copy; 2025 Bible Q&A. All Rights Reserved.</p>
+        </footer>
     </div>
-    
-    <!-- Scripts: Note the order: questions.js MUST load before script.js -->
-    <script src="questions.js"></script>
-    <script src="script.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const qaItems = document.querySelectorAll('.qa-item');
+
+            qaItems.forEach(item => {
+                const question = item.querySelector('.question');
+                const answer = item.querySelector('.answer');
+
+                question.addEventListener('click', () => {
+                    const isActive = question.classList.contains('active');
+
+                    // Close all other answers
+                    qaItems.forEach(otherItem => {
+                        otherItem.querySelector('.question').classList.remove('active');
+                        otherItem.querySelector('.answer').classList.add('hidden');
+                    });
+                    
+                    // Toggle current answer
+                    if (!isActive) {
+                        question.classList.add('active');
+                        answer.classList.remove('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
