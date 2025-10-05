@@ -19,11 +19,6 @@
             Bible Answer Lookup
         </h1>
 
-        <!-- Status and Diagnostic Area -->
-        <div id="status-display" class="mb-4 p-3 rounded-lg text-sm bg-gray-100 border border-gray-300">
-            Current Status: Initializing...
-        </div>
-
         <!-- Search Input and Button -->
         <div class="flex flex-col md:flex-row gap-4 mb-8">
             <input 
@@ -40,19 +35,15 @@
             </button>
         </div>
 
-        <!-- Loading Indicator -->
-        <div id="loading-indicator" class="hidden text-center text-blue-500 font-medium">
-            <div class="animate-spin inline-block w-6 h-6 border-4 border-blue-300 border-t-blue-600 rounded-full"></div>
-            <p class="mt-2">Loading question data...</p>
-        </div>
-
         <!-- Results Display Area -->
         <div id="results-container">
             <!-- Search results will appear here -->
         </div>
     </div>
     
-    <!-- Scripts -->
+    <!-- Scripts: Note the order: data.js MUST load before script.js -->
+    <script src="data.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
+
