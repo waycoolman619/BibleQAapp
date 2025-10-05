@@ -4,23 +4,19 @@
     "answers": ["Saul"]
   },
   {
-    "question": "What are the first five books of the Bible collectively known as?",
-    "answers": ["The Torah", "The Pentateuch", "The Five Books of Moses"]
-  },
-  {
     "question": "Who was swallowed by a great fish?",
     "answers": ["Jonah"]
   },
   {
-    "question": "Which disciple denied Jesus three times?",
-    "answers": ["Peter"]
+    "question": "Who were the sons of Adam and Eve mentioned in Genesis?",
+    "answers": ["Cain", "Abel", "Seth"]
   },
   {
-    "question": "How many days and nights did it rain during the great flood?",
-    "answers": ["40 days and 40 nights"]
+    "question": "What are the first five books of the Bible collectively known as?",
+    "answers": ["The Torah", "The Pentateuch"]
   },
   {
-    "question": "What was the name of the garden where Adam and Eve lived?",
-    "answers": ["The Garden of Eden"]
+    "question": "What animal spoke to Balaam?",
+    "answers": ["A donkey"]
   }
 ]
