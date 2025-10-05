@@ -13,8 +13,10 @@
         .question-toggle {
             transition: transform 0.3s ease;
         }
+        /* Rotate the arrow when the question is active (open) */
         .question.active .question-toggle {
             transform: rotate(90deg);
+            color: #2563eb; /* Blue color for active state */
         }
     </style>
 </head>
@@ -28,86 +30,129 @@
             <p class="text-lg text-gray-600 mt-2">Exploring the Scriptures Together</p>
         </header>
 
-        <!-- Main Content: Q&A Section -->
-        <main class="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6 md:p-8">
-            <div id="qa-container">
-                <!-- Q&A Item 1 -->
-                <div class="qa-item border-b border-gray-200 py-4">
-                    <div class="question flex justify-between items-center cursor-pointer">
-                        <h2 class="text-xl font-semibold text-gray-800">What are the first five books of the Bible called?</h2>
-                        <span class="question-toggle text-2xl font-bold text-gray-500">&#x276F;</span>
-                    </div>
-                    <div class="answer hidden mt-4 text-gray-700">
-                        <p>The first five books of the Bible are known as the Pentateuch or the Torah. They are Genesis, Exodus, Leviticus, Numbers, and Deuteronomy. These books lay the foundation for the entire biblical narrative, covering creation, the establishment of the covenant with Abraham, the exodus from Egypt, the giving of the Law on Mount Sinai, and the Israelites' journey to the promised land.</p>
-                    </div>
-                </div>
-
-                <!-- Q&A Item 2 -->
-                <div class="qa-item border-b border-gray-200 py-4">
-                    <div class="question flex justify-between items-center cursor-pointer">
-                        <h2 class="text-xl font-semibold text-gray-800">Who wrote the book of Psalms?</h2>
-                        <span class="question-toggle text-2xl font-bold text-gray-500">&#x276F;</span>
-                    </div>
-                    <div class="answer hidden mt-4 text-gray-700">
-                        <p>The book of Psalms is a collection of poems, hymns, and prayers from various authors. While King David is traditionally credited with writing many of them (around 73 are attributed to him), other authors include Asaph, the sons of Korah, Solomon, and Moses. The authorship of many psalms remains anonymous.</p>
-                    </div>
-                </div>
-
-                <!-- Q&A Item 3 -->
-                <div class="qa-item border-b border-gray-200 py-4">
-                    <div class="question flex justify-between items-center cursor-pointer">
-                        <h2 class="text-xl font-semibold text-gray-800">What is the shortest verse in the Bible?</h2>
-                         <span class="question-toggle text-2xl font-bold text-gray-500">&#x276F;</span>
-                    </div>
-                    <div class="answer hidden mt-4 text-gray-700">
-                        <p>The shortest verse in the Bible is John 11:35, which simply says, "Jesus wept." This powerful two-word verse occurs in the context of Jesus mourning the death of his friend Lazarus before raising him from the dead.</p>
-                    </div>
-                </div>
-
-                <!-- Q&A Item 4 -->
-                <div class="qa-item py-4">
-                    <div class="question flex justify-between items-center cursor-pointer">
-                        <h2 class="text-xl font-semibold text-gray-800">What are the Gospels?</h2>
-                         <span class="question-toggle text-2xl font-bold text-gray-500">&#x276F;</span>
-                    </div>
-                    <div class="answer hidden mt-4 text-gray-700">
-                        <p>The Gospels are the first four books of the New Testament: Matthew, Mark, Luke, and John. They each provide a unique account of the life, ministry, teachings, death, and resurrection of Jesus Christ. The word "gospel" itself means "good news."</p>
-                    </div>
-                </div>
+        <!-- Main Content: Q&A Section - Dynamically populated by JavaScript -->
+        <main class="max-w-3xl mx-auto bg-white rounded-xl shadow-2xl p-6 md:p-10">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-2">Frequently Asked Questions</h2>
+            <div id="qa-container" class="divide-y divide-gray-100">
+                <!-- Dynamic Q&A Items will be injected here -->
             </div>
         </main>
 
         <!-- Footer -->
         <footer class="text-center mt-12">
-            <p class="text-gray-500">&copy; 2025 Bible Q&A. All Rights Reserved.</p>
+            <p class="text-gray-500 text-sm">&copy; 2025 Bible Q&A. All Rights Reserved.</p>
         </footer>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const qaItems = document.querySelectorAll('.qa-item');
+        // Use a self-executing function to keep variables scoped
+        (function() {
+            // STEP 1: Centralized Data Array - Easily add new content here!
+            const qaData = [
+                {
+                    question: "What are the first five books of the Bible called?",
+                    answer: "The first five books of the Bible are known as the **Pentateuch** or the **Torah**. They are Genesis, Exodus, Leviticus, Numbers, and Deuteronomy. These books lay the foundation for the entire biblical narrative, covering creation, the establishment of the covenant with Abraham, the exodus from Egypt, the giving of the Law on Mount Sinai, and the Israelites' journey to the promised land."
+                },
+                {
+                    question: "Who wrote the book of Psalms?",
+                    answer: "The book of Psalms is a collection of poems, hymns, and prayers from various authors. While **King David** is traditionally credited with writing many of them (around 73 are attributed to him), other authors include Asaph, the sons of Korah, Solomon, and Moses. The authorship of many psalms remains anonymous."
+                },
+                {
+                    question: "What is the shortest verse in the Bible?",
+                    answer: "The shortest verse in the Bible is **John 11:35**, which simply says, \"Jesus wept.\" This powerful two-word verse occurs in the context of Jesus mourning the death of his friend Lazarus before raising him from the dead."
+                },
+                {
+                    question: "What are the Gospels?",
+                    answer: "The Gospels are the first four books of the New Testament: **Matthew, Mark, Luke, and John**. They each provide a unique account of the life, ministry, teachings, death, and resurrection of Jesus Christ. The word \"gospel\" itself means \"good news.\""
+                },
+                {
+                    question: "What is the significance of the number 40 in the Bible?",
+                    answer: "The number 40 often symbolizes a period of **testing, judgment, or purification**. Examples include: the 40 days and nights of rain during the Great Flood, the Israelites' 40 years of wandering in the wilderness, and Jesus' 40 days of fasting and temptation in the desert."
+                }
+            ];
 
-            qaItems.forEach(item => {
-                const question = item.querySelector('.question');
-                const answer = item.querySelector('.answer');
+            // STEP 2: Function to Render Q&A Items
+            function renderQA() {
+                const qaContainer = document.getElementById('qa-container');
+                let htmlContent = '';
 
-                question.addEventListener('click', () => {
-                    const isActive = question.classList.contains('active');
-
-                    // Close all other answers
-                    qaItems.forEach(otherItem => {
-                        otherItem.querySelector('.question').classList.remove('active');
-                        otherItem.querySelector('.answer').classList.add('hidden');
-                    });
-                    
-                    // Toggle current answer
-                    if (!isActive) {
-                        question.classList.add('active');
-                        answer.classList.remove('hidden');
-                    }
+                qaData.forEach((item, index) => {
+                    // Construct the HTML for one Q&A item, using ARIA for accessibility
+                    htmlContent += `
+                        <div class="qa-item py-4">
+                            <div 
+                                class="question flex justify-between items-center cursor-pointer p-2 rounded-lg hover:bg-blue-50 transition duration-150 ease-in-out" 
+                                role="button" 
+                                aria-expanded="false" 
+                                id="question-${index}"
+                                tabindex="0"
+                            >
+                                <h2 class="text-lg md:text-xl font-semibold text-gray-800">${item.question}</h2>
+                                <span class="question-toggle text-xl md:text-2xl font-bold text-gray-500 ml-4">&#x276F;</span>
+                            </div>
+                            <div class="answer hidden pt-3 pl-2 pr-2 text-gray-700 leading-relaxed" role="region" aria-labelledby="question-${index}">
+                                <p>${item.answer}</p>
+                            </div>
+                        </div>
+                    `;
                 });
+
+                // Inject the generated HTML into the container
+                qaContainer.innerHTML = htmlContent;
+            }
+
+
+            // STEP 3: Function for Accordion Logic
+            function setupAccordion() {
+                const qaItems = document.querySelectorAll('.qa-item');
+
+                qaItems.forEach(item => {
+                    const question = item.querySelector('.question');
+                    const answer = item.querySelector('.answer');
+
+                    // Function to handle the opening/closing logic
+                    const toggleAnswer = () => {
+                        const isActive = question.classList.contains('active');
+
+                        // Close all other answers
+                        qaItems.forEach(otherItem => {
+                            const otherQuestion = otherItem.querySelector('.question');
+                            const otherAnswer = otherItem.querySelector('.answer');
+                            
+                            otherQuestion.classList.remove('active');
+                            otherQuestion.classList.remove('bg-blue-100'); // Remove active background
+                            otherAnswer.classList.add('hidden');
+                            otherQuestion.setAttribute('aria-expanded', 'false');
+                        });
+                        
+                        // Toggle current answer if it was not active
+                        if (!isActive) {
+                            question.classList.add('active');
+                            question.classList.add('bg-blue-100'); // Add active background
+                            answer.classList.remove('hidden');
+                            question.setAttribute('aria-expanded', 'true');
+                        }
+                    };
+
+                    // Handle mouse/touch click
+                    question.addEventListener('click', toggleAnswer);
+
+                    // Handle keyboard (Enter/Space) interaction
+                    question.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault(); // Prevent default scroll for Space
+                            toggleAnswer();
+                        }
+                    });
+                });
+            }
+
+            // Run the setup when the page loads
+            document.addEventListener('DOMContentLoaded', function () {
+                renderQA();
+                setupAccordion();
             });
-        });
+        })();
     </script>
 
 </body>
