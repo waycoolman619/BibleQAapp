@@ -1,0 +1,26 @@
+[
+  {
+    "question": "Who was the first king of Israel?",
+    "answers": ["Saul"]
+  },
+  {
+    "question": "What are the first five books of the Bible collectively known as?",
+    "answers": ["The Torah", "The Pentateuch", "The Five Books of Moses"]
+  },
+  {
+    "question": "Who was swallowed by a great fish?",
+    "answers": ["Jonah"]
+  },
+  {
+    "question": "Which disciple denied Jesus three times?",
+    "answers": ["Peter"]
+  },
+  {
+    "question": "How many days and nights did it rain during the great flood?",
+    "answers": ["40 days and 40 nights"]
+  },
+  {
+    "question": "What was the name of the garden where Adam and Eve lived?",
+    "answers": ["The Garden of Eden"]
+  }
+]

@@ -1,0 +1,55 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bible Answer Search</title>
+    <!-- Load Tailwind CSS for modern, responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Link to the external custom stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="bg-gray-50">
+    <div class="w-full max-w-lg bg-white rounded-xl shadow-2xl p-6 md:p-8">
+      <header class="text-center mb-6">
+        <h1 class="text-3xl font-extrabold text-indigo-700">
+          Bible Answer Search
+        </h1>
+        <p class="text-gray-500 mt-2">
+          Find answers quickly by searching keywords in the question database.
+        </p>
+      </header>
+
+      <div id="search-container" class="flex flex-col space-y-4">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="e.g., 'first king' or 'swallowed fish'"
+          class="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150"
+        />
+        <button
+          id="search-btn"
+          class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg shadow-md transition duration-200 ease-in-out hover:bg-blue-700 active:bg-blue-800"
+        >
+          Search for Answer
+        </button>
+      </div>
+
+      <div id="loading-indicator" class="mt-6 text-center text-gray-500 hidden">
+        Loading questions...
+      </div>
+
+      <div id="results-container" class="mt-6">
+        <p
+          class="text-center text-gray-500 p-4 border border-dashed border-gray-300 rounded-lg"
+        >
+          Your search results will appear here.
+        </p>
+      </div>
+    </div>
+
+    <!-- The script files are linked here -->
+    <!-- The JSON file will be fetched by script.js -->
+    <script src="script.js"></script>
+  </body>
+</html>
