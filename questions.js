@@ -1,0 +1,24 @@
+// This file defines the bibleData array, which will be accessible globally 
+// because it is loaded via a separate <script> tag before script.js.
+const bibleData = [
+  {
+    question: "Who was the first king of Israel?",
+    answers: ["Saul"]
+  },
+  {
+    question: "Who was swallowed by a great fish?",
+    answers: ["Jonah"]
+  },
+  {
+    question: "Who were the sons of Adam and Eve mentioned in Genesis?",
+    answers: ["Cain", "Abel", "Seth"]
+  },
+  {
+    question: "What are the first five books of the Bible collectively known as?",
+    answers: ["The Torah", "The Pentateuch"]
+  },
+  {
+    question: "What animal spoke to Balaam?",
+    answers: ["A donkey"]
+  }
+];
