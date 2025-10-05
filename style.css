@@ -1,4 +1,4 @@
-/* Custom font and base styles /*
+/* Custom font and base styles */
 body {
 font-family: 'Inter', sans-serif;
 background-color: #f7f7f7;
@@ -8,12 +8,12 @@ align-items: flex-start;
 min-height: 100vh;
 padding: 2rem 1rem;
 }
-/* Style for the search button animation /*
+/* Style for the search button animation */
 #search-btn:hover {
 transform: translateY(-2px);
 box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
 }
-/ Style for the result box /
+/* Style for the result box */
 .result-box {
 border-left: 4px solid #3b82f6; / Blue border for emphasis /
 background-color: #ffffff;
@@ -31,4 +31,5 @@ margin-bottom: 0.5rem;
 .result-box p {
 color: #4b5563; / Medium gray /
 }
+
 
