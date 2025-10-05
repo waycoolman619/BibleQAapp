@@ -36,6 +36,17 @@
             <div id="qa-container" class="divide-y divide-gray-100">
                 <!-- Dynamic Q&A Items will be injected here -->
             </div>
+
+            <!-- Show More Button Section -->
+            <div class="text-center pt-6 border-t border-gray-100 mt-6">
+                <button 
+                    id="showMoreBtn" 
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50"
+                >
+                    Show More Questions
+                </button>
+            </div>
+            
         </main>
 
         <!-- Footer -->
@@ -47,39 +58,129 @@
     <script>
         // Use a self-executing function to keep variables scoped
         (function() {
-            // STEP 1: Centralized Data Array - Easily add new content here!
+            // Configuration Constants for Pagination
+            const INITIAL_LIMIT = 4;
+            const LOAD_LIMIT = 6; // Set to 6 so 4 + 6 = 10, as requested
+            let currentLimit = INITIAL_LIMIT; // Tracks how many questions are currently visible
+
+            // STEP 1: Centralized Data Array - Now includes 10 questions for proper testing
             const qaData = [
                 {
+                    id: "BQA001", // Unique ID for this question
                     question: "What are the first five books of the Bible called?",
-                    answer: "The first five books of the Bible are known as the **Pentateuch** or the **Torah**. They are Genesis, Exodus, Leviticus, Numbers, and Deuteronomy. These books lay the foundation for the entire biblical narrative, covering creation, the establishment of the covenant with Abraham, the exodus from Egypt, the giving of the Law on Mount Sinai, and the Israelites' journey to the promised land."
+                    answers: [
+                        {
+                            text: "The first five books of the Bible are known as the **Pentateuch** or the **Torah**. They are Genesis, Exodus, Leviticus, Numbers, and Deuteronomy. These books lay the foundation for the entire biblical narrative, covering creation, the establishment of the covenant with Abraham, the exodus from Egypt, the giving of the Law on Mount Sinai, and the Israelites' journey to the promised land.",
+                            source: "Rev. Thomas A. (Theological Perspective)"
+                        },
+                        {
+                            text: "Historically, these five books are sometimes referred to as 'The Law' or 'Instruction' in Jewish tradition. They contain the foundational narrative from creation through the death of Moses, focusing on the covenant relationship with Israel.",
+                            source: "Dr. Rachel M. (Historical/Cultural Context)"
+                        }
+                    ]
                 },
                 {
+                    id: "BQA002", // Unique ID for this question
                     question: "Who wrote the book of Psalms?",
-                    answer: "The book of Psalms is a collection of poems, hymns, and prayers from various authors. While **King David** is traditionally credited with writing many of them (around 73 are attributed to him), other authors include Asaph, the sons of Korah, Solomon, and Moses. The authorship of many psalms remains anonymous."
+                    answers: [{
+                        text: "The book of Psalms is a collection of poems, hymns, and prayers from various authors. While **King David** is traditionally credited with writing many of them (around 73 are attributed to him), other authors include Asaph, the sons of Korah, Solomon, and Moses. The authorship of many psalms remains anonymous.",
+                        source: "Dr. Eleanor Vance"
+                    }]
                 },
                 {
+                    id: "BQA003", // Unique ID for this question
                     question: "What is the shortest verse in the Bible?",
-                    answer: "The shortest verse in the Bible is **John 11:35**, which simply says, \"Jesus wept.\" This powerful two-word verse occurs in the context of Jesus mourning the death of his friend Lazarus before raising him from the dead."
+                    answers: [{
+                        text: "The shortest verse in the Bible is **John 11:35**, which simply says, \"Jesus wept.\" This powerful two-word verse occurs in the context of Jesus mourning the death of his friend Lazarus before raising him from the dead.",
+                        source: "Bible Scholars Team"
+                    }]
                 },
                 {
+                    id: "BQA004", // Unique ID for this question
                     question: "What are the Gospels?",
-                    answer: "The Gospels are the first four books of the New Testament: **Matthew, Mark, Luke, and John**. They each provide a unique account of the life, ministry, teachings, death, and resurrection of Jesus Christ. The word \"gospel\" itself means \"good news.\""
+                    answers: [{
+                        text: "The Gospels are the first four books of the New Testament: **Matthew, Mark, Luke, and John**. They each provide a unique account of the life, ministry, teachings, death, and resurrection of Jesus Christ. The word \"gospel\" itself means \"good news.\"",
+                        source: "The Editorial Staff"
+                    }]
                 },
                 {
+                    id: "BQA005", // Unique ID for this question
                     question: "What is the significance of the number 40 in the Bible?",
-                    answer: "The number 40 often symbolizes a period of **testing, judgment, or purification**. Examples include: the 40 days and nights of rain during the Great Flood, the Israelites' 40 years of wandering in the wilderness, and Jesus' 40 days of fasting and temptation in the desert."
+                    answers: [{
+                        text: "The number 40 often symbolizes a period of **testing, judgment, or purification**. Examples include: the 40 days and nights of rain during the Great Flood, the Israelites' 40 years of wandering in the wilderness, and Jesus' 40 days of fasting and temptation in the desert.",
+                        source: "Rev. Thomas A."
+                    }]
+                },
+                // Additional Questions for Pagination Testing
+                {
+                    id: "BQA006",
+                    question: "Which prophet was swallowed by a great fish?",
+                    answers: [{
+                        text: "The prophet **Jonah** was swallowed by a great fish (often interpreted as a whale) after attempting to flee from God's command to preach to the people of Nineveh.",
+                        source: "Sunday School Literature"
+                    }]
+                },
+                {
+                    id: "BQA007",
+                    question: "What does the word 'Genesis' mean?",
+                    answers: [{
+                        text: "The word 'Genesis' comes from the Greek word meaning **'origin,' 'source,' or 'birth.'** It is fitting, as the book details the beginning of the world, humankind, and God's relationship with Israel.",
+                        source: "Theological Dictionary"
+                    }]
+                },
+                {
+                    id: "BQA008",
+                    question: "How many disciples did Jesus have?",
+                    answers: [{
+                        text: "Jesus had **twelve** core disciples (or Apostles). Their names were Simon Peter, Andrew, James (son of Zebedee), John, Philip, Bartholomew, Thomas, Matthew, James (son of Alphaeus), Thaddaeus, Simon the Zealot, and Judas Iscariot (who was replaced by Matthias).",
+                        source: "New Testament Studies"
+                    }]
+                },
+                {
+                    id: "BQA009",
+                    question: "What is the Golden Rule?",
+                    answers: [{
+                        text: "The Golden Rule is a teaching of Jesus: **'Do unto others as you would have them do unto you,'** found in Matthew 7:12. It encapsulates the ethical principle of treating others as one would wish to be treated.",
+                        source: "Matthew 7:12"
+                    }]
+                },
+                {
+                    id: "BQA010",
+                    question: "What was the name of the garden where Jesus prayed before his crucifixion?",
+                    answers: [{
+                        text: "Jesus prayed in the Garden of **Gethsemane** (meaning 'oil press') on the Mount of Olives just before his arrest and crucifixion.",
+                        source: "Gospel of Mark"
+                    }]
                 }
             ];
 
-            // STEP 2: Function to Render Q&A Items
-            function renderQA() {
+            // STEP 2: Function to Render Q&A Items up to a specific limit
+            function renderQA(limit) {
                 const qaContainer = document.getElementById('qa-container');
                 let htmlContent = '';
+                
+                // Use slice to get only the items up to the current limit
+                const itemsToRender = qaData.slice(0, limit);
 
-                qaData.forEach((item, index) => {
-                    // Construct the HTML for one Q&A item, using ARIA for accessibility
+                itemsToRender.forEach((item, index) => {
+                    
+                    // Build content for multiple answers (Answer Box HTML)
+                    let answerContent = '';
+                    item.answers.forEach((answerItem, answerIndex) => {
+                        answerContent += `
+                            <div class="p-4 mb-4 rounded-lg bg-gray-50 border border-gray-200 shadow-inner" data-answer-id="${item.id}-${answerIndex + 1}">
+                                <p class="mb-3 text-gray-800">${answerItem.text}</p>
+                                <p class="text-xs text-gray-500 italic text-right border-t border-gray-200 pt-2 mt-2">
+                                    Source: <span class="font-medium text-gray-600">${answerItem.source}</span>
+                                </p>
+                            </div>
+                        `;
+                    });
+
+
+                    // Construct the HTML for the Q&A item container, adding the data attribute for the ID
                     htmlContent += `
-                        <div class="qa-item py-4">
+                        <div class="qa-item py-4" data-question-id="${item.id}">
                             <div 
                                 class="question flex justify-between items-center cursor-pointer p-2 rounded-lg hover:bg-blue-50 transition duration-150 ease-in-out" 
                                 role="button" 
@@ -91,7 +192,7 @@
                                 <span class="question-toggle text-xl md:text-2xl font-bold text-gray-500 ml-4">&#x276F;</span>
                             </div>
                             <div class="answer hidden pt-3 pl-2 pr-2 text-gray-700 leading-relaxed" role="region" aria-labelledby="question-${index}">
-                                <p>${item.answer}</p>
+                                ${answerContent}
                             </div>
                         </div>
                     `;
@@ -99,10 +200,36 @@
 
                 // Inject the generated HTML into the container
                 qaContainer.innerHTML = htmlContent;
+                
+                // Re-setup accordion logic for the newly rendered elements
+                setupAccordion(); 
+            }
+            
+            // Function to manage the display and button state
+            function updateDisplay() {
+                // Render the current batch of questions
+                renderQA(currentLimit); 
+                
+                const showMoreBtn = document.getElementById('showMoreBtn');
+                
+                const remaining = qaData.length - currentLimit;
+
+                if (remaining <= 0) {
+                    // Hide button if all items are displayed
+                    showMoreBtn.classList.add('hidden');
+                } else {
+                    // Show button and update its text
+                    showMoreBtn.classList.remove('hidden');
+                    
+                    // Determine how many to load next (up to LOAD_LIMIT or just the remaining)
+                    const nextLoadCount = Math.min(LOAD_LIMIT, remaining);
+                    
+                    showMoreBtn.textContent = `Show ${nextLoadCount} More Questions (${remaining} Total Remaining)`;
+                }
             }
 
 
-            // STEP 3: Function for Accordion Logic
+            // STEP 3: Function for Accordion Logic (must be called after rendering)
             function setupAccordion() {
                 const qaItems = document.querySelectorAll('.qa-item');
 
@@ -131,6 +258,9 @@
                             question.classList.add('bg-blue-100'); // Add active background
                             answer.classList.remove('hidden');
                             question.setAttribute('aria-expanded', 'true');
+                            
+                            const questionId = item.getAttribute('data-question-id');
+                            console.log(`Question opened: ${questionId}`);
                         }
                     };
 
@@ -149,8 +279,20 @@
 
             // Run the setup when the page loads
             document.addEventListener('DOMContentLoaded', function () {
-                renderQA();
-                setupAccordion();
+                const showMoreBtn = document.getElementById('showMoreBtn');
+                
+                // Event listener for the "Show More" button
+                showMoreBtn.addEventListener('click', () => {
+                    const remaining = qaData.length - currentLimit;
+                    // Load the next batch, up to LOAD_LIMIT
+                    const nextLoadCount = Math.min(LOAD_LIMIT, remaining); 
+                    
+                    currentLimit += nextLoadCount;
+                    updateDisplay();
+                });
+                
+                // Initial display
+                updateDisplay(); 
             });
         })();
     </script>
