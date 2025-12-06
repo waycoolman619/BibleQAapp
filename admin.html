@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin: Edit Bible Data</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      #admin-container {
+        max-width: 900px;
+        width: 100%;
+      }
+      .form-section {
+        background-color: #f0f9ff;
+        border: 2px solid #3b82f6;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <div id="admin-container" class="bg-white rounded-xl shadow-2xl p-6 md:p-8">
+      <header class="text-center mb-6">
+        <h1 class="text-3xl font-extrabold text-red-700">
+          ⚠️ Admin Panel: Edit Data ⚠️
+        </h1>
+        <p class="text-gray-600 mt-2">
+          Use the selector below to **Edit** an existing question, or choose the
+          default option to **Add New**.
+        </p>
+        <a href="index.html" class="text-blue-600 hover:underline mt-1 block"
+          >← Back to Main Website</a
+        >
+      </header>
+
+      <div
+        id="quick-add-form"
+        class="form-section p-5 rounded-xl shadow-lg mb-6"
+      >
+        <h2 class="text-2xl font-bold text-blue-700 mb-4 border-b pb-2">
+          Add or Edit Question Data
+        </h2>
+
+        <div class="space-y-4">
+          <div class="pt-2 border-t border-gray-200">
+            <label for="question-selector" class="block font-semibold mb-1"
+              >Select Question to Edit:</label
+            >
+            <select
+              id="question-selector"
+              class="w-full p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50"
+            ></select>
+          </div>
+
+          <div class="flex justify-end">
+            <button
+              id="delete-question-btn"
+              type="button"
+              class="bg-red-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 hover:bg-red-600 hidden"
+            >
+              🗑️ Delete Selected Question
+            </button>
+          </div>
+
+          <div>
+            <label for="new-question" class="block font-semibold mb-1"
+              >Question Text (Editable):</label
+            >
+            <textarea
+              id="new-question"
+              class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+              rows="2"
+              placeholder="e.g., What was the name of the garden?"
+            ></textarea>
+          </div>
+
+          <div class="pt-2 border-t border-gray-200">
+            <label for="new-category" class="block font-semibold mb-1"
+              >Category:</label
+            >
+            <input
+              type="text"
+              id="new-category"
+              list="category-options"
+              class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Start typing or select an existing category..."
+            />
+            <datalist id="category-options"> </datalist>
+          </div>
+
+          <div
+            id="answers-container"
+            class="space-y-6 pt-2 border-t border-gray-200"
+          ></div>
+
+          <button
+            id="add-answer-btn"
+            type="button"
+            class="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg shadow-md transition duration-200 hover:bg-blue-600"
+          >
+            + Add Another Answer to this Question
+          </button>
+
+          <div id="form-message" class="text-red-600 font-medium hidden"></div>
+
+          <button
+            id="add-to-editor-btn"
+            class="w-full bg-green-600 text-white font-semibold py-3 rounded-lg shadow-md transition duration-200 ease-in-out hover:bg-green-700 active:bg-green-800"
+          >
+            💾 Save Changes / Add New Question to Editor
+          </button>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <div class="flex justify-between items-center mb-2">
+          <label for="data-editor" class="text-lg font-semibold">
+            Bible Data Editor:
+          </label>
+          <button
+            id="copy-json-btn"
+            class="bg-red-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 hover:bg-red-600 text-sm"
+          >
+            📋 Copy Bible Data to Clipboard
+          </button>
+        </div>
+        <textarea
+          id="data-editor"
+          class="w-full h-96 p-4 border-2 border-gray-300 rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+        ></textarea>
+        <datalist id="source-options"></datalist>
+      </div>
+
+      <div
+        class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded"
+        role="alert"
+      >
+        <p class="font-bold">Important!</p>
+        <p>
+          You must manually **copy the entire JSON array** (using the copy
+          button) and paste it into the `const bibleData = [...]` section of
+          your `index.html` file to save changes.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      // 1. DATA (UPDATED: Answers is now an array of objects)
+      const initialData = [
+        {
+          question: "Who was the first king of Israel?",
+          category: "Old Testament People",
+          answers: [
+            {
+              text: "Saul",
+              bibleReference: {
+                name: "1 Samuel 10:1",
+                url: "https://www.biblegateway.com/passage/?search=1+Samuel+10:1&version=NIV",
+              },
+              source: {
+                name: "Bible Knowledge Book",
+                url: "http://example.com/source/bkbook",
+              },
+            },
+          ],
+        },
+        {
+          question:
+            "What are the first five books of the Bible collectively known as?",
+          category: "General Knowledge",
+          answers: [
+            {
+              text: "The Torah",
+              bibleReference: {
+                name: "Exodus 1:1",
+                url: "https://www.biblegateway.com/passage/?search=Exodus+1%3A1&version=NIV",
+              },
+              source: {
+                name: "General Bible Facts",
+                url: "http://example.com/source/genfacts",
+              },
+            },
+            {
+              text: "The Pentateuch",
+              bibleReference: {
+                name: "Genesis 1:1",
+                url: "https://www.biblegateway.com/passage/?search=Genesis+1:1&version=NIV",
+              },
+              source: {},
+            },
+          ],
+        },
+        {
+          question: "Who was swallowed by a great fish?",
+          category: "Old Testament Stories",
+          answers: [
+            {
+              text: "Jonah",
+              bibleReference: {
+                name: "Jonah 1:17",
+                url: "https://www.biblegateway.com/passage/?search=Jonah+1%3A17&version=NIV",
+              },
+              source: {},
+            },
+          ],
+        },
+        {
+          question: "Which disciple denied Jesus three times?",
+          category: "New Testament People",
+          answers: [
+            {
+              text: "Peter",
+              bibleReference: {
+                name: "Matthew 26:69-75",
+                url: "https://www.biblegateway.com/passage/?search=Matthew+26:69-75&version=NIV",
+              },
+              source: {},
+            },
+          ],
+        },
+        {
+          question:
+            "How many days and nights did it rain during the great flood?",
+          category: "Old Testament Stories",
+          answers: [
+            {
+              text: "40 days and 40 nights",
+              bibleReference: {
+                name: "Genesis 7:4",
+                url: "https://www.biblegateway.com/passage/?search=Genesis+7:4&version=NIV",
+              },
+              source: {
+                name: "Noah's Ark Guide",
+                url: "http://example.com/source/noah",
+              },
+            },
+          ],
+        },
+        {
+          question: "What was the name of the garden where Adam and Eve lived?",
+          category: "General Knowledge",
+          answers: [
+            {
+              text: "The Garden of Eden",
+              bibleReference: {
+                name: "Genesis 2:8",
+                url: "https://www.biblegateway.com/passage/?search=Genesis+2:8&version=NIV",
+              },
+              source: {},
+            },
+          ],
+        },
+      ];
+
+      // DOM Elements
+      const dataEditor = document.getElementById("data-editor");
+      const saveButton = document.getElementById("add-to-editor-btn");
+      const copyButton = document.getElementById("copy-json-btn");
+      const deleteButton = document.getElementById("delete-question-btn");
+      const messageDisplay = document.getElementById("form-message");
+
+      // Form Elements
+      const questionSelector = document.getElementById("question-selector");
+      const newQuestionInput = document.getElementById("new-question");
+      const newCategoryInput = document.getElementById("new-category");
+      const answersContainer = document.getElementById("answers-container");
+      const addAnswerBtn = document.getElementById("add-answer-btn");
+
+      // --- Core Functions ---
+
+      function loadDataForEditing(data) {
+        const jsonString = JSON.stringify(data, null, 4);
+        dataEditor.value = jsonString;
+      }
+
+      // Helper to generate unique ID for dynamic fields
+      let answerFieldCounter = 0;
+      function getUniqueId() {
+        return "answer-group-" + ++answerFieldCounter;
+      }
+
+      /* --- Dynamic Answer Field Management (Datalist Auto-fill Logic) --- */
+
+      // Function to handle auto-fill for General Source
+      function handleSourceInput(event) {
+        const input = event.target;
+        const selectedName = input.value;
+        const parentGroup = input.closest(".answer-group");
+        const urlInput = parentGroup.querySelector(".source-url-input");
+
+        const datalist = document.getElementById("source-options");
+        // Find the option element whose value matches the input
+        const option = datalist.querySelector(
+          `option[value="${selectedName}"]`
+        );
+
+        if (option && urlInput) {
+          // Get the data-url attribute from the option and set it on the URL input
+          const url = option.getAttribute("data-url");
+          urlInput.value = url;
+        }
+      }
+
+      // Function to attach listeners (or re-attach if needed)
+      function attachDatalistListeners() {
+        // 1. Source Auto-fill
+        document.querySelectorAll(".source-name-input").forEach((input) => {
+          input.removeEventListener("input", handleSourceInput); // Remove existing listener to prevent duplicates
+          input.addEventListener("input", handleSourceInput);
+        });
+        // Note: Bible Reference listeners are removed as requested.
+      }
+
+      // Function to generate and append one set of answer fields (with optional defaults)
+      function addNewAnswerField(defaultData = {}) {
+        const uniqueId = getUniqueId();
+        const currentAnswerCount =
+          answersContainer.querySelectorAll(".answer-group").length + 1;
+
+        // Populate defaults if provided
+        const text = defaultData.text || "";
+        const refName = defaultData.bibleReference?.name || "";
+        const refUrl = defaultData.bibleReference?.url || "";
+        const sourceName = defaultData.source?.name || "";
+        const sourceUrl = defaultData.source?.url || "";
+
+        const html = `
+              <div id="${uniqueId}" class="answer-group p-4 border border-gray-300 rounded-lg shadow-sm bg-white space-y-3">
+                  <div class="flex justify-between items-center bg-gray-50 p-2 -m-4 mb-3 rounded-t-lg border-b border-gray-200">
+                      <h4 class="text-md font-bold text-gray-700">Answer #${currentAnswerCount}</h4>
+                      <button type="button" class="remove-answer-btn text-red-500 hover:text-red-700 text-sm font-medium" data-target="#${uniqueId}">Remove Answer</button>
+                  </div>
+
+                  <div>
+                      <label for="answer-text-${uniqueId}" class="block text-sm font-semibold mb-1">Answer Text:</label>
+                      <input type="text" id="answer-text-${uniqueId}" name="answer-text" value="${text}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500" placeholder="e.g., The Garden of Eden"/>
+                  </div>
+
+                  <div>
+                      <label for="bible-ref-name-${uniqueId}" class="block text-sm font-semibold mb-1 text-blue-700">Bible Reference Name:</label>
+                      <input type="text" id="bible-ref-name-${uniqueId}" name="bible-ref-name" value="${refName}" class="w-full p-2 border border-blue-400 rounded-lg bible-ref-name-input" placeholder="e.g., John 3:16"/>
+                  </div>
+
+                  <div>
+                      <label for="bible-ref-url-${uniqueId}" class="block text-sm font-semibold mb-1">Bible Reference URL (Link):</label>
+                      <input type="url" id="bible-ref-url-${uniqueId}" name="bible-ref-url" value="${refUrl}" class="w-full p-2 border border-blue-400 rounded-lg bible-ref-url-input" placeholder="e.g., https://www.biblegateway.com/..."/>
+                  </div>
+
+                  <div class="pt-2 border-t border-gray-100">
+                      <label for="source-name-${uniqueId}" class="block text-sm font-semibold mb-1">General Source Name:</label>
+                      <input type="text" id="source-name-${uniqueId}" name="source-name" value="${sourceName}" list="source-options" class="w-full p-2 border border-gray-300 rounded-lg source-name-input" placeholder="Select or type a source name..."/>
+                  </div>
+
+                  <div>
+                      <label for="source-url-${uniqueId}" class="block text-sm font-semibold mb-1">General Source URL (Link):</label>
+                      <input type="url" id="source-url-${uniqueId}" name="source-url" value="${sourceUrl}" class="w-full p-2 border border-gray-300 rounded-lg source-url-input" placeholder="e.g., http://trusted-website.com/..."/>
+                  </div>
+              </div>
+          `;
+        answersContainer.insertAdjacentHTML("beforeend", html);
+
+        // Attach listeners for the newly added fields
+        attachDatalistListeners();
+      }
+
+      /* --- Question Selection / Deletion Logic --- */
+
+      function populateQuestionSelector(data) {
+        questionSelector.innerHTML =
+          '<option value="">-- Add New Question --</option>'; // Default option
+
+        const questions = data.map((item) => item.question);
+        questions.sort().forEach((q) => {
+          questionSelector.innerHTML += `<option value="${q}">${q}</option>`;
+        });
+      }
+
+      function loadQuestionForEditing(questionText) {
+        // 1. Clear previous dynamic answers
+        answersContainer.innerHTML = "";
+        answerFieldCounter = 0;
+
+        // If empty option selected, clear the whole form and set to 'Add New' state
+        if (!questionText) {
+          newQuestionInput.value = "";
+          newCategoryInput.value = "";
+          addNewAnswerField(); // Add one fresh empty group
+          deleteButton.classList.add("hidden");
+          document.querySelector("h2").textContent =
+            "Add or Edit Question Data";
+          return;
+        }
+
+        // 2. Find the question object
+        const currentData = JSON.parse(dataEditor.value);
+        const questionObj = currentData.find(
+          (item) => item.question === questionText
+        );
+
+        if (!questionObj) return;
+
+        // 3. Populate main fields
+        newQuestionInput.value = questionObj.question;
+        newCategoryInput.value = questionObj.category;
+        document.querySelector(
+          "h2"
+        ).textContent = `Editing Question: ${questionText}`;
+
+        // 4. Populate dynamic answer fields
+        questionObj.answers.forEach((answer) => {
+          addNewAnswerField(answer);
+        });
+
+        // 5. Show delete button
+        deleteButton.classList.remove("hidden");
+      }
+
+      function handleDeleteAction() {
+        const questionToDelete = questionSelector.value;
+
+        if (!questionToDelete) {
+          alert("Please select a question to delete.");
+          return;
+        }
+
+        if (
+          !confirm(
+            `Are you absolutely sure you want to permanently delete the question: "${questionToDelete}" and all its answers? This cannot be undone.`
+          )
+        ) {
+          return;
+        }
+
+        try {
+          let currentData = JSON.parse(dataEditor.value);
+
+          // Filter out the question
+          currentData = currentData.filter(
+            (item) => item.question !== questionToDelete
+          );
+
+          loadDataForEditing(currentData);
+
+          // Reset the form
+          questionSelector.value = ""; // Reset selector
+          loadQuestionForEditing(""); // Clear all form fields
+
+          // Re-populate the selector
+          populateQuestionSelector(currentData);
+
+          messageDisplay.textContent = `Success: Question "${questionToDelete}" has been deleted. Remember to copy the content to index.html!`;
+          messageDisplay.classList.remove("hidden", "text-red-600");
+          messageDisplay.classList.add("text-green-600");
+        } catch (e) {
+          messageDisplay.textContent =
+            "Error during deletion process. Please check the JSON syntax manually.";
+          messageDisplay.classList.remove("hidden");
+          messageDisplay.classList.add("text-red-600");
+          console.error("Deletion Error:", e);
+        }
+      }
+
+      /* --- Save Logic (Handles Edit and Add New) --- */
+
+      function handleSaveAction() {
+        messageDisplay.classList.add("hidden");
+
+        const questionText = newQuestionInput.value.trim();
+        const category = newCategoryInput.value.trim();
+        const answerGroups = document.querySelectorAll(".answer-group");
+        const selectedQuestion = questionSelector.value; // The question text originally loaded
+        const isEditingMode = !!selectedQuestion;
+
+        if (!questionText) {
+          messageDisplay.textContent = "Error: Question text is required.";
+          messageDisplay.classList.remove("hidden");
+          messageDisplay.classList.add("text-red-600");
+          return;
+        }
+
+        if (answerGroups.length === 0) {
+          messageDisplay.textContent =
+            "Error: Please add at least one answer to save the question.";
+          messageDisplay.classList.remove("hidden");
+          messageDisplay.classList.add("text-red-600");
+          return;
+        }
+
+        // 1. Compile Answer Objects
+        const newAnswerObjs = [];
+        let hasEmptyAnswerText = false;
+
+        answerGroups.forEach((group) => {
+          const text = group.querySelector('[name="answer-text"]').value.trim();
+          const refName = group
+            .querySelector('[name="bible-ref-name"]')
+            .value.trim();
+          const refUrl = group
+            .querySelector('[name="bible-ref-url"]')
+            .value.trim();
+          const sourceName = group
+            .querySelector('[name="source-name"]')
+            .value.trim();
+          const sourceUrl = group
+            .querySelector('[name="source-url"]')
+            .value.trim();
+
+          if (!text) {
+            hasEmptyAnswerText = true;
+            return;
+          }
+
+          // Only create source/ref object if EITHER the name or URL is provided
+          const sourceObj =
+            sourceName || sourceUrl ? { name: sourceName, url: sourceUrl } : {};
+          const bibleRefObj =
+            refName || refUrl ? { name: refName, url: refUrl } : {};
+
+          newAnswerObjs.push({
+            text: text,
+            source: sourceObj,
+            bibleReference: bibleRefObj,
+          });
+        });
+
+        if (hasEmptyAnswerText) {
+          messageDisplay.textContent =
+            "Error: One or more answer text fields is empty. Please remove the empty answer group or fill it in.";
+          messageDisplay.classList.remove("hidden");
+          messageDisplay.classList.add("text-red-600");
+          return;
+        }
+
+        let currentData;
+        try {
+          currentData = JSON.parse(dataEditor.value);
+          if (!Array.isArray(currentData)) {
+            throw new Error("Data is not a valid array.");
+          }
+        } catch (e) {
+          messageDisplay.textContent =
+            "Error parsing existing JSON data in the editor. Please fix the syntax manually.";
+          messageDisplay.classList.remove("hidden");
+          messageDisplay.classList.add("text-red-600");
+          return;
+        }
+
+        // 2. Find Index (Handle Edit Mode vs. Append/New Mode)
+        let existingIndex = -1;
+
+        if (isEditingMode) {
+          // In EDITING mode, we find the index based on the question that was selected (selectedQuestion)
+          existingIndex = currentData.findIndex(
+            (item) => item.question === selectedQuestion
+          );
+        } else {
+          // In ADD NEW mode, check if the user accidentally typed an existing question (to allow appending)
+          existingIndex = currentData.findIndex(
+            (item) =>
+              item.question.trim().toLowerCase() === questionText.toLowerCase()
+          );
+        }
+
+        let successMessage;
+
+        if (existingIndex !== -1) {
+          // --- EDITING OR APPENDING ---
+
+          if (isEditingMode) {
+            // EDITING: Replace the entire question object at the existing index.
+            currentData[existingIndex] = {
+              question: questionText, // Use the potentially updated text from input
+              category: category,
+              answers: newAnswerObjs, // Use the new, complete answer array
+            };
+            successMessage = `Success: Question "${questionText}" has been fully updated/edited.`;
+          } else {
+            // APPENDING: Append new answers
+            if (
+              !confirm(
+                `Warning: The question "${questionText}" already exists. Do you want to APPEND the new answers to the existing question instead of creating a duplicate?`
+              )
+            ) {
+              messageDisplay.textContent = "Action cancelled by user.";
+              messageDisplay.classList.remove("hidden", "text-green-600");
+              messageDisplay.classList.add("text-red-600");
+              return;
+            }
+            currentData[existingIndex].answers.push(...newAnswerObjs);
+            if (category) {
+              currentData[existingIndex].category = category;
+            }
+            successMessage = `Success: ${newAnswerObjs.length} answer(s) appended to "${questionText}".`;
+          }
+        } else {
+          // --- ADDING NEW QUESTION ---
+          if (!category) {
+            messageDisplay.textContent =
+              "Error: Category is required when adding a brand new question.";
+            messageDisplay.classList.remove("hidden");
+            messageDisplay.classList.add("text-red-600");
+            return;
+          }
+
+          const newQuestionObj = {
+            question: questionText,
+            category: category,
+            answers: newAnswerObjs,
+          };
+          currentData.unshift(newQuestionObj);
+          successMessage = `Success: New Question added to the top of the editor with ${newAnswerObjs.length} answer(s).`;
+        }
+
+        // 3. Post-Save Actions
+
+        // Load the updated data into the editor
+        loadDataForEditing(currentData);
+
+        // Reset the form to the default "Add New" state
+        questionSelector.value = "";
+        loadQuestionForEditing("");
+
+        // Update all datalists (if new categories/sources were added)
+        populateQuestionSelector(currentData);
+        populateCategoryDatalist(getUniqueCategories(currentData));
+        populateSourceDatalist(getUniqueSources(currentData));
+
+        // Show success message
+        messageDisplay.textContent = `${successMessage} Remember to copy the content to index.html!`;
+        messageDisplay.classList.remove("hidden");
+        messageDisplay.classList.remove("text-red-600");
+        messageDisplay.classList.add("text-green-600");
+      }
+
+      function copyJsonContent() {
+        const content = dataEditor.value;
+
+        if (!content.trim()) {
+          alert("The editor is empty. Nothing to copy.");
+          return;
+        }
+
+        navigator.clipboard
+          .writeText(content)
+          .then(() => {
+            // Temporary feedback on the button itself
+            copyButton.textContent = "✅ Copied!";
+            copyButton.classList.remove("bg-red-500", "hover:bg-red-600");
+            copyButton.classList.add("bg-green-600", "hover:bg-green-700");
+
+            setTimeout(() => {
+              copyButton.textContent = "📋 Copy Bible Data to Clipboard";
+              copyButton.classList.add("bg-red-500", "hover:bg-red-600");
+              copyButton.classList.remove("bg-green-600", "hover:bg-green-700");
+            }, 1500);
+          })
+          .catch((err) => {
+            console.error("Could not copy text: ", err);
+            alert("Failed to copy. Please select the text manually.");
+          });
+      }
+
+      /* --- Datalist Logic --- */
+
+      function getUniqueCategories(data) {
+        const categories = data.map((item) => item.category);
+        const uniqueCategories = [...new Set(categories)];
+        return uniqueCategories.sort();
+      }
+
+      function populateCategoryDatalist(categories) {
+        const datalist = document.getElementById("category-options");
+        if (!datalist) return;
+
+        datalist.innerHTML = categories
+          .map((category) => `<option value="${category}"></option>`)
+          .join("");
+      }
+
+      function getUniqueSources(data) {
+        // Collect all unique source objects (name/url pairs)
+        const sources = data
+          .flatMap((item) => item.answers)
+          .map((answer) => answer.source)
+          .filter((source) => source && source.name && source.url);
+
+        const uniqueSourcesMap = {};
+        sources.forEach((source) => {
+          // Use name as the key for uniqueness, storing the URL
+          if (!uniqueSourcesMap[source.name]) {
+            uniqueSourcesMap[source.name] = source.url;
+          }
+        });
+
+        return Object.keys(uniqueSourcesMap)
+          .map((name) => ({
+            name: name,
+            url: uniqueSourcesMap[name],
+          }))
+          .sort((a, b) => a.name.localeCompare(b.name));
+      }
+
+      function populateSourceDatalist(sources) {
+        const datalist = document.getElementById("source-options");
+        if (!datalist) return;
+
+        // Populate options with the name as the value and the URL in a data attribute
+        datalist.innerHTML = sources
+          .map(
+            (source) =>
+              `<option value="${source.name}" data-url="${source.url}"></option>`
+          )
+          .join("");
+      }
+
+      // --- Initialization ---
+
+      window.onload = function () {
+        // 1. Load initial data into the editor
+        loadDataForEditing(initialData);
+
+        // 2. Populate the selector and datalists (Bible Ref datalist logic removed)
+        populateQuestionSelector(initialData);
+        populateCategoryDatalist(getUniqueCategories(initialData));
+        populateSourceDatalist(getUniqueSources(initialData));
+
+        // 3. Start with one blank answer field (for "Add New" default state)
+        addNewAnswerField();
+
+        // 4. Attach event listeners
+        saveButton.addEventListener("click", handleSaveAction);
+        copyButton.addEventListener("click", copyJsonContent);
+        addAnswerBtn.addEventListener("click", addNewAnswerField);
+        questionSelector.addEventListener("change", (e) =>
+          loadQuestionForEditing(e.target.value)
+        );
+        deleteButton.addEventListener("click", handleDeleteAction);
+
+        // Event delegation for remove button (targets the container for all clicks)
+        answersContainer.addEventListener("click", (e) => {
+          if (e.target.classList.contains("remove-answer-btn")) {
+            const targetId = e.target.getAttribute("data-target");
+            document.querySelector(targetId).remove();
+
+            // Re-number the remaining answer groups
+            document
+              .querySelectorAll(".answer-group")
+              .forEach((group, index) => {
+                group.querySelector("h4").textContent = `Answer #${index + 1}`;
+              });
+            // Decrement the global counter, although it's mainly for new IDs
+            answerFieldCounter =
+              document.querySelectorAll(".answer-group").length;
+          }
+        });
+      };
+    </script>
+  </body>
+</html>
